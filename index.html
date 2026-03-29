@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CahyASTRO | Universe Explorer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <div class="star-load"></div>
+            <h2>Welcome to My Universe</h2>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p id="progress-text">0%</p>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app" style="display: none;">
+        <nav class="navbar">
+            <div class="logo">CAHY| <span class="neon-dot">🌌</span></div>
+            <ul class="nav-menu" id="nav-menu">
+                <li data-page="home" class="nav-item active">Home</li>
+                <li data-page="profile" class="nav-item">Profile</li>
+                <li data-page="komunitas" class="nav-item">Komunitas</li>
+                <li data-page="sosial" class="nav-item">Sosial Media</li>
+                <li data-page="support" class="nav-item">Support</li>
+                <li data-page="bisnis" class="nav-item">Bisnis</li>
+            </ul>
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+
+        <!-- Particle Starfield (CSS) -->
+        <div class="stars-bg"></div>
+        <div class="floating-particles"></div>
+
+        <main class="content-container">
+            <!-- HOME PAGE (dengan semua fitur baru) -->
+            <section id="home-page" class="page active-page">
+                <!-- Profile Header -->
+                <div class="profile-header glass-card">
+                    <div class="avatar">
+                        <div class="avatar-glow">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <h2>CAHY / RIA</h2>
+                        <p class="bio">🌠 HANYA INGIN MENJADI TERKENAL DI DUNIA ASTRONOMY 🌠</p>
+                        <div class="contact-row">
+                            <span><i class="fab fa-whatsapp"></i> +62 812-6213-1455</span>
+                            <span><i class="far fa-envelope"></i> cahyonocahyxz@gmail.com</span>
+                            <button id="homeCopyEmail" class="small-copy"><i class="fas fa-copy"></i></button>
+                        </div>
+                        <div class="status-badge">
+                            <i class="fas fa-satellite-dish"></i> Status: <span id="live-status">Menjelajah Galaksi Andromeda</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid Fitur Astronomi (12+ fitur) -->
+                <div class="astro-grid">
+                    <!-- 1. Fakta Hari Ini + Gambar -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-star"></i> Fakta Hari Ini</h3>
+                        <div class="fact-image" id="fact-image">🌟</div>
+                        <p id="daily-fact">Memuat fakta...</p>
+                        <button class="btn-refresh" id="refreshFact"><i class="fas fa-sync-alt"></i> Fakta Lain</button>
+                    </div>
+
+                    <!-- 2. Cuaca Antariksa -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-sun"></i> Cuaca Antariksa</h3>
+                        <div id="space-weather">
+                            <p><i class="fas fa-meteor"></i> Aurora: <span id="aurora">--</span></p>
+                            <p><i class="fas fa-wind"></i> Angin Surya: <span id="solar-wind">--</span> km/s</p>
+                            <p><i class="fas fa-circle"></i> Bintik Matahari: <span id="sunspots">--</span></p>
+                        </div>
+                    </div>
+
+                    <!-- 3. Kuis Astronomi (15 soal) -->
+                    <div class="feature-card wide-card">
+                        <h3><i class="fas fa-question-circle"></i> Kuis Astronomi</h3>
+                        <div id="quiz-area">
+                            <p id="quiz-question">Soal akan muncul di sini</p>
+                            <div id="quiz-options"></div>
+                            <div id="quiz-score">Skor: 0 / 15</div>
+                            <button id="nextQuiz" class="btn-small">Soal Selanjutnya</button>
+                            <p id="quiz-feedback"></p>
+                        </div>
+                    </div>
+
+                    <!-- 4. NASA APOD (Gambar Hari Ini) -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-image"></i> NASA APOD</h3>
+                        <div id="apod-container">
+                            <img id="apod-img" src="https://via.placeholder.com/300x200?text=Loading+NASA+Image" alt="APOD">
+                            <p id="apod-title"></p>
+                            <a id="apod-link" href="#" target="_blank">Lihat Detail</a>
+                        </div>
+                    </div>
+
+                    <!-- 5. Countdown Gerhana -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-hourglass-half"></i> Countdown Gerhana Bulan</h3>
+                        <div id="countdown">-- hari -- jam -- menit -- detik</div>
+                        <p>Gerhana Bulan Total: 7 September 2026</p>
+                    </div>
+
+                    <!-- 6. Quote Astronomi -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-quote-left"></i> Quote Space</h3>
+                        <p id="astro-quote">"The universe is under no obligation to make sense to you." - Neil deGrasse Tyson</p>
+                        <button id="newQuote" class="btn-small">Quote Baru</button>
+                    </div>
+
+                    <!-- 7. Fase Bulan -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-moon"></i> Fase Bulan Saat Ini</h3>
+                        <div id="moon-phase">
+                            <i class="fas fa-moon" id="moon-icon"></i>
+                            <p id="moon-phase-name">--</p>
+                            <p id="moon-illumination">Illumination: --%</p>
+                        </div>
+                    </div>
+
+                    <!-- 8. Lokasi ISS -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-space-shuttle"></i> Lokasi ISS</h3>
+                        <div id="iss-location">
+                            <p>Latitude: <span id="iss-lat">--</span>°</p>
+                            <p>Longitude: <span id="iss-lon">--</span>°</p>
+                            <p>Altitude: <span id="iss-alt">--</span> km</p>
+                            <button id="refreshISS" class="btn-small"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+                    </div>
+
+                    <!-- 9. Tabel Planet dengan Ikon -->
+                    <div class="feature-card wide-card">
+                        <h3><i class="fas fa-planet-ringed"></i> Fakta Cepat Planet</h3>
+                        <div class="planet-table">
+                            <div class="planet-row"><span><i class="fas fa-mercury"></i> Merkurius</span><span>Terdekat Matahari</span></div>
+                            <div class="planet-row"><span><i class="fas fa-venus"></i> Venus</span><span>Planet terpanas</span></div>
+                            <div class="planet-row"><span><i class="fas fa-earth"></i> Bumi</span><span>Rumah kita</span></div>
+                            <div class="planet-row"><span><i class="fas fa-mars"></i> Mars</span><span>Planet Merah</span></div>
+                            <div class="planet-row"><span><i class="fas fa-jupiter"></i> Jupiter</span><span>Raksasa gas</span></div>
+                            <div class="planet-row"><span><i class="fas fa-saturn"></i> Saturnus</span><span>Cincin indah</span></div>
+                            <div class="planet-row"><span><i class="fas fa-uranus"></i> Uranus</span><span>Miring ekstrim</span></div>
+                            <div class="planet-row"><span><i class="fas fa-neptune"></i> Neptunus</span><span>Angin tercepat</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 10. AI Chatbot -->
+                    <div class="feature-card wide-card">
+                        <h3><i class="fas fa-robot"></i> AI AstroBot (masih bego☺🗿)</h3>
+                        <div class="chat-container">
+                            <div id="chat-log" class="chat-log">
+                                <div class="bot-message">Halo! Aku AstroBot. Tanyakan apa saja tentang astronomi, planet, bintang, atau fakta luar angkasa.</div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="chat-input" placeholder="Tanya tentang bintang, planet, dll...">
+                                <button id="send-chat"><i class="fas fa-paper-plane"></i> Kirim</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11. Animasi Partikel (Canvas) -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-chart-line"></i> Peta Bintang Interaktif</h3>
+                        <canvas id="starCanvas" width="300" height="200" style="width:100%; height:auto; background:#000; border-radius:12px;"></canvas>
+                        <p>Klik canvas untuk membuat bintang baru!</p>
+                    </div>
+
+                    <!-- 12. Berita Astronomi -->
+                    <div class="feature-card">
+                        <h3><i class="fas fa-newspaper"></i> Berita Astronomi</h3>
+                        <ul id="news-list">
+                            <li><a href="#" target="_blank">James Webb Temukan Galaksi Tertua</a></li>
+                            <li><a href="#" target="_blank">Roket Starship Siap Uji Coba</a></li>
+                            <li><a href="#" target="_blank">Asteroid 2024 YR4 Amankah?</a></li>
+                            <li><a href="#" target="_blank">Misi Europa Clipper Diluncurkan</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE PAGE -->
+            <section id="profile-page" class="page">
+                <div class="card glass-card">
+                    <h2><i class="fas fa-user-astronaut"></i> Profil Peneliti</h2>
+                    <div class="profile-detail">
+                        <p><strong>Nama panggilan:</strong> CAHY / RIA</p>
+                        <p><strong>Bio:</strong> ingin menjadi creator terkenal </p>
+                        <div class="email-box">
+                            <p><strong>Email:</strong> cahyonocahyxz@gmail.com</p>
+                            <button class="btn-copy" id="copyEmailBtn"><i class="fas fa-copy"></i> Copy Email</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- KOMUNITAS PAGE -->
+            <section id="komunitas-page" class="page">
+                <div class="card glass-card">
+                    <h2><i class="fas fa-users"></i> Komunitas Astronomi</h2>
+                    <div class="link-list">
+                        <a href="https://chat.whatsapp.com/GXf8UcuhuAj7HDY71jSQ3X?mode=gi_t" target="_blank" class="btn-link wa"><i class="fab fa-whatsapp"></i> WhatsApp Group</a>
+                        <a href="https://discord.gg/qmmf6AaYR" target="_blank" class="btn-link dc"><i class="fab fa-discord"></i> Discord Server</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SOSIAL MEDIA PAGE -->
+            <section id="sosial-page" class="page">
+                <div class="card glass-card">
+                    <h2><i class="fas fa-globe"></i> Social Universe</h2>
+                    <div class="social-grid">
+                        <a href="https://www.tiktok.com/@cahy144hz" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok 1</a>
+                        <a href="https://www.tiktok.com/@cahy144hz02" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok 2</a>
+                        <a href="https://youtube.com/@cahy144hz" target="_blank" class="social-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
+                        <a href="https://www.instagram.com/cahy_144hz" target="_blank" class="social-btn ig"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="https://open.spotify.com/user/31dbcqsh4codewo2vp5n5ukyhamu" target="_blank" class="social-btn spotify"><i class="fab fa-spotify"></i> Spotify</a>
+                        <a href="https://s.snackvideo.com/u/@cahy144hz/vntdPNbA" target="_blank" class="social-btn snack"><i class="fas fa-video"></i> Snack Video</a>
+                        <a href="https://mobile.capcutshare.com/sv2/ZSuQUAbws/" target="_blank" class="social-btn capcut"><i class="fas fa-cut"></i> CapCut</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUPPORT PAGE -->
+            <section id="support-page" class="page">
+                <div class="card glass-card">
+                    <h2><i class="fas fa-hand-holding-heart"></i> Dukung admin di sini</h2>
+                    <div class="support-section">
+                        <div class="donasi-box">
+                            <h3>Saweria</h3>
+                            <a href="https://saweria.co/CahyASTRO" target="_blank" class="btn-donasi-big">Donasi via Saweria <i class="fas fa-rocket"></i></a>
+                        </div>
+                        <div class="ewallet-box">
+                            <h3>E-Wallet</h3>
+                            <p><strong>Nomor:</strong> 081262131455</p>
+                            <div class="ewallet-buttons">
+                                <a href="https://link.dana.id/minta?phone=081262131455" target="_blank" class="btn-ewallet dana"><i class="fas fa-wallet"></i> Dana</a>
+                                <a href="https://gojek.link/gopay/send?phone=081262131455" target="_blank" class="btn-ewallet gopay"><i class="fas fa-credit-card"></i> Gopay</a>
+                                <button id="ovoAlertBtn" class="btn-ewallet ovo"><i class="fas fa-mobile-alt"></i> OVO (Alert)</button>
+                                <button id="copyWalletBtn" class="btn-ewallet copy"><i class="fas fa-copy"></i> Copy Nomor</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BISNIS PAGE -->
+            <section id="bisnis-page" class="page">
+                <div class="card glass-card">
+                    <h2><i class="fas fa-briefcase"></i> Kerja Sama & Bisnis</h2>
+                    <p class="bisnis-desc">Hubungi untuk pembelian / kerja sama astronomi, merchandise, atau kolaborasi konten.</p>
+                    <a href="https://wa.me/message/WFPHDICEMISDD1" target="_blank" class="btn-chat-wa"><i class="fab fa-whatsapp"></i> Chat WhatsApp Bisnis</a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>✦ Cahy Astro — Menjelajah Alam Semesta ✦</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
