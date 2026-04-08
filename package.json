@@ -1,0 +1,37 @@
+{
+  "name": "cahyastro-portal",
+  "version": "2.0.0",
+  "description": "CahyASTRO Portal - AI Astronomy Platform with Interactive 3D Star Map",
+  "type": "module",
+  "main": "index.html",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'Static site - no build needed'",
+    "start": "node server.js",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "three": "^r159",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "body-parser": "^1.20.2"
+  },
+  "keywords": [
+    "astronomy",
+    "ai-assistant",
+    "3d-star-map",
+    "education",
+    "nasa",
+    "space",
+    "interactive"
+  ],
+  "author": "Cahyo (Cahy/Ria)",
+  "license": "MIT"
+}

@@ -1,344 +1,708 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // ==================== LOADING SCREEN ====================
-    let progress = 0;
-    const progressBar = document.getElementById("progress-bar");
-    const progressText = document.getElementById("progress-text");
-    const loadingScreen = document.getElementById("loading-screen");
-    const app = document.getElementById("app");
-    const interval = setInterval(() => {
-        if (progress < 100) {
-            progress += Math.floor(Math.random() * 15) + 1;
-            if (progress > 100) progress = 100;
-            progressBar.style.width = progress + "%";
-            progressText.innerText = progress + "%";
-        } else {
-            clearInterval(interval);
-            loadingScreen.style.opacity = "0";
-            setTimeout(() => {
-                loadingScreen.style.display = "none";
-                app.style.display = "flex";
-                app.style.flexDirection = "column";
-                initHomeFeatures();
-            }, 800);
-        }
-    }, 80);
+/* ========================================
+   CahyASTRO Portal - Main Application
+   Comprehensive SPA with All Features
+   ======================================== */
 
-    // ==================== NAVIGASI SPA ====================
-    const navItems = document.querySelectorAll(".nav-item");
-    const pages = document.querySelectorAll(".page");
-    function activatePage(pageId) {
-        pages.forEach(page => page.classList.remove("active-page"));
-        const activePage = document.getElementById(pageId + "-page");
-        if (activePage) activePage.classList.add("active-page");
-        navItems.forEach(item => {
-            item.classList.remove("active");
-            if (item.getAttribute("data-page") === pageId) item.classList.add("active");
-        });
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-    navItems.forEach(item => {
-        item.addEventListener("click", () => {
-            const page = item.getAttribute("data-page");
-            activatePage(page);
-            const mobileNav = document.querySelector(".nav-menu");
-            if (mobileNav.classList.contains("active")) mobileNav.classList.remove("active");
-        });
-    });
-    activatePage("home");
-
-    // Mobile menu
-    const mobileToggle = document.getElementById("mobile-menu");
-    const navMenu = document.getElementById("nav-menu");
-    if (mobileToggle) {
-        mobileToggle.addEventListener("click", () => navMenu.classList.toggle("active"));
-    }
-
-    // ==================== FUNGSI TOAST ====================
-    function showToast(message) {
-        const toast = document.createElement("div");
-        toast.innerText = message;
-        toast.style.position = "fixed";
-        toast.style.bottom = "20px";
-        toast.style.left = "50%";
-        toast.style.transform = "translateX(-50%)";
-        toast.style.backgroundColor = "#0f172ad9";
-        toast.style.backdropFilter = "blur(10px)";
-        toast.style.color = "#0ff";
-        toast.style.padding = "12px 24px";
-        toast.style.borderRadius = "50px";
-        toast.style.border = "1px solid cyan";
-        toast.style.zIndex = "9999";
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 500); }, 2000);
-    }
-
-    // ==================== FITUR HOME ====================
-    function initHomeFeatures() {
-        // 1. Fakta Hari Ini + Gambar
-        const facts = [
-            { text: "Satu tahun di Venus lebih pendek dari satu hari di Venus.", icon: "🪐" },
-            { text: "Bintang neutron memiliki kepadatan setara satu sendok teh seberat 10 juta ton.", icon: "⭐" },
-            { text: "Lubang hitam dapat membengkokkan ruang dan waktu.", icon: "🌀" },
-            { text: "Galaksi Andromeda bergerak menuju Bima Sakti dengan kecepatan 110 km/detik.", icon: "🌌" },
-            { text: "Ada lebih banyak bintang di alam semesta daripada butiran pasir di seluruh Bumi.", icon: "✨" },
-            { text: "Matahari menyusut sekitar 5 meter per detik karena fusi nuklir.", icon: "☀️" },
-            { text: "Titik terdingin di alam semesta ada di Nebula Boomerang: -272°C.", icon: "❄️" },
-            { text: "Jupiter memiliki 79 bulan yang diketahui.", icon: "🪐" },
-            { text: "Satu hari di Mars hampir sama dengan di Bumi: 24 jam 37 menit.", icon: "🔴" }
-        ];
-        const factEl = document.getElementById("daily-fact");
-        const factImage = document.getElementById("fact-image");
-        const refreshFactBtn = document.getElementById("refreshFact");
-        function updateFact() {
-            const random = facts[Math.floor(Math.random() * facts.length)];
-            factEl.innerText = random.text;
-            factImage.innerHTML = random.icon;
-        }
-        updateFact();
-        refreshFactBtn.addEventListener("click", updateFact);
-
-        // 2. Cuaca Antariksa (simulasi)
-        function updateSpaceWeather() {
-            document.getElementById("aurora").innerHTML = Math.random() > 0.5 ? '<i class="fas fa-charging-station"></i> Aktif' : '<i class="fas fa-cloud-moon"></i> Tenang';
-            document.getElementById("solar-wind").innerText = (350 + Math.random() * 150).toFixed(0);
-            document.getElementById("sunspots").innerText = Math.floor(Math.random() * 150);
-        }
-        updateSpaceWeather();
-        setInterval(updateSpaceWeather, 10000);
-
-        // 3. Kuis Astronomi (15 soal)
-        const quizBank = [
-            { q: "Planet terbesar di tata surya?", options: ["Mars", "Jupiter", "Saturnus", "Neptunus"], correct: 1 },
-            { q: "Berapa jumlah planet dalam tata surya kita?", options: ["7", "8", "9", "10"], correct: 1 },
-            { q: "Apa nama galaksi kita?", options: ["Andromeda", "Bima Sakti", "Triangulum", "Sombrero"], correct: 1 },
-            { q: "Siapa yang pertama kali mengamati bulan Jupiter?", options: ["Newton", "Galileo Galilei", "Kepler", "Copernicus"], correct: 1 },
-            { q: "Planet mana yang dikenal sebagai 'Planet Merah'?", options: ["Venus", "Mars", "Jupiter", "Saturnus"], correct: 1 },
-            { q: "Apa nama satelit alami Bumi?", options: ["Titan", "Europa", "Bulan", "Phobos"], correct: 2 },
-            { q: "Berapa lama waktu yang dibutuhkan Bumi untuk mengorbit Matahari?", options: ["365 hari", "366 hari", "364 hari", "360 hari"], correct: 0 },
-            { q: "Apa nama bintang terdekat dengan Bumi setelah Matahari?", options: ["Sirius", "Proxima Centauri", "Alpha Centauri", "Betelgeuse"], correct: 1 },
-            { q: "Planet mana yang memiliki cincin paling menonjol?", options: ["Jupiter", "Uranus", "Neptunus", "Saturnus"], correct: 3 },
-            { q: "Apa nama fenomena ketika Bulan berada di antara Bumi dan Matahari?", options: ["Gerhana Bulan", "Gerhana Matahari", "Supernova", "Aurora"], correct: 1 },
-            { q: "Siapa astronot pertama yang berjalan di Bulan?", options: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"], correct: 2 },
-            { q: "Apa nama asteroid terbesar di sabuk asteroid?", options: ["Vesta", "Ceres", "Pallas", "Hygiea"], correct: 1 },
-            { q: "Planet manakah yang memiliki suhu permukaan tertinggi?", options: ["Merkurius", "Venus", "Bumi", "Mars"], correct: 1 },
-            { q: "Apa nama galaksi terdekat dengan Bima Sakti?", options: ["Andromeda", "Segitiga", "Awan Magellan", "Sombrero"], correct: 0 },
-            { q: "Berapa kecepatan cahaya dalam ruang hampa (km/detik)?", options: ["300.000", "150.000", "450.000", "100.000"], correct: 0 }
-        ];
-        let currentQuizIndex = 0;
-        let quizScore = 0;
-        const quizQuestion = document.getElementById("quiz-question");
-        const quizOptionsDiv = document.getElementById("quiz-options");
-        const quizScoreDiv = document.getElementById("quiz-score");
-        const quizFeedback = document.getElementById("quiz-feedback");
-        function loadQuiz() {
-            const q = quizBank[currentQuizIndex];
-            quizQuestion.innerText = q.q;
-            quizOptionsDiv.innerHTML = "";
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement("button");
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if (idx === q.correct) {
-                        quizScore++;
-                        quizFeedback.innerText = "✅ Benar! +1 poin";
-                        quizFeedback.style.color = "lightgreen";
-                    } else {
-                        quizFeedback.innerText = `❌ Salah. Jawaban benar: ${q.options[q.correct]}`;
-                        quizFeedback.style.color = "orange";
-                    }
-                    quizScoreDiv.innerText = `Skor: ${quizScore} / 15`;
-                    setTimeout(() => {
-                        currentQuizIndex = (currentQuizIndex + 1) % quizBank.length;
-                        loadQuiz();
-                        quizFeedback.innerText = "";
-                    }, 1500);
-                };
-                quizOptionsDiv.appendChild(btn);
+const App = {
+    state: {
+        currentPage: 'home',
+        quizStarted: false,
+        quizQuestions: [],
+        quizScore: 0,
+        quizCurrentQuestion: 0,
+        astronomyData: [],
+        educationCurrentPage: 1,
+        educationFiltered: [],
+        chatHistory: [],
+    },
+    
+    init() {
+        this.setupGalaxyBackground();
+        this.setupNavigation();
+        this.setupLoadingScreen();
+        this.loadInitialData();
+        this.cacheElements();
+    },
+    
+    cacheElements() {
+        this.navLinks = document.querySelectorAll('.nav-link');
+        this.pages = document.querySelectorAll('.page');
+    },
+    
+    setupLoadingScreen() {
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');
+            }
+        }, 2000);
+    },
+    
+    setupGalaxyBackground() {
+        const canvas = document.getElementById('galaxyCanvas');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        for (let i = 0; i < 200; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+                opacity: Math.random() * 0.5 + 0.3,
             });
         }
-        loadQuiz();
-        document.getElementById("nextQuiz").addEventListener("click", () => {
-            currentQuizIndex = (currentQuizIndex + 1) % quizBank.length;
-            loadQuiz();
-            quizFeedback.innerText = "";
-        });
-
-        // 4. NASA APOD
-        async function fetchAPOD() {
-            try {
-                const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
-                const data = await res.json();
-                document.getElementById("apod-img").src = data.url;
-                document.getElementById("apod-title").innerText = data.title;
-                document.getElementById("apod-link").href = data.hdurl || data.url;
-            } catch {
-                document.getElementById("apod-img").src = "https://via.placeholder.com/400x200?text=Gagal+memuat+APOD";
-                document.getElementById("apod-title").innerText = "Gunakan API key pribadi untuk gambar nyata";
-            }
-        }
-        fetchAPOD();
-
-        // 5. Countdown Gerhana Bulan
-        function updateCountdown() {
-            const target = new Date("September 7, 2026 00:00:00").getTime();
-            const now = new Date().getTime();
-            const diff = target - now;
-            if (diff <= 0) document.getElementById("countdown").innerHTML = "Gerhana telah terjadi!";
-            else {
-                const days = Math.floor(diff / (1000*60*60*24));
-                const hours = Math.floor((diff % (86400000)) / 3600000);
-                const minutes = Math.floor((diff % 3600000) / 60000);
-                const secs = Math.floor((diff % 60000) / 1000);
-                document.getElementById("countdown").innerHTML = `${days} hari ${hours} jam ${minutes} menit ${secs} detik`;
-            }
-        }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        // 6. Quote Astronomi
-        const quotes = [
-            "Kita terbuat dari debu bintang. - Carl Sagan",
-            "Langit bukan batasnya, hanya awal. - Neil Armstrong",
-            "Ada satu kebenaran: Bumi itu bulat. - Buzz Aldrin",
-            "Alam semesta makin besar setiap detik. - Edwin Hubble",
-            "Bumi adalah panggung kecil di kosmos. - Carl Sagan",
-            "Kita adalah cara alam semesta untuk mengenali dirinya sendiri. - Carl Sagan"
-        ];
-        const quoteEl = document.getElementById("astro-quote");
-        document.getElementById("newQuote").addEventListener("click", () => {
-            quoteEl.innerText = quotes[Math.floor(Math.random() * quotes.length)];
-        });
-
-        // 7. Fase Bulan (simulasi)
-        function updateMoonPhase() {
-            const phases = ["Bulan Baru", "Sabit Muda", "Kuartal Pertama", "Cembung Awal", "Purnama", "Cembung Akhir", "Kuartal Ketiga", "Sabit Tua"];
-            const idx = Math.floor(Math.random() * phases.length);
-            document.getElementById("moon-phase-name").innerText = phases[idx];
-            const illumination = Math.floor(Math.random() * 100);
-            document.getElementById("moon-illumination").innerHTML = `Illumination: ${illumination}%`;
-            // change icon based on phase
-            const icon = document.getElementById("moon-icon");
-            if (idx === 4) icon.className = "fas fa-moon fa-3x";
-            else if (idx < 2) icon.className = "fas fa-moon";
-            else icon.className = "fas fa-moon";
-        }
-        updateMoonPhase();
-        setInterval(updateMoonPhase, 30000);
-
-        // 8. Lokasi ISS (simulasi, tapi bisa juga dengan API nyata)
-        async function fetchISS() {
-            try {
-                const res = await fetch("https://api.wheretheiss.at/v1/satellites/25544");
-                const data = await res.json();
-                document.getElementById("iss-lat").innerText = data.latitude.toFixed(2);
-                document.getElementById("iss-lon").innerText = data.longitude.toFixed(2);
-                document.getElementById("iss-alt").innerText = data.altitude.toFixed(0);
-            } catch {
-                // fallback simulasi
-                document.getElementById("iss-lat").innerText = (Math.random() * 180 - 90).toFixed(2);
-                document.getElementById("iss-lon").innerText = (Math.random() * 360 - 180).toFixed(2);
-                document.getElementById("iss-alt").innerText = Math.floor(400 + Math.random() * 50);
-            }
-        }
-        fetchISS();
-        document.getElementById("refreshISS").addEventListener("click", fetchISS);
-        setInterval(fetchISS, 30000);
-
-        // 9. Star Map Canvas
-        const canvas = document.getElementById("starCanvas");
-        const ctx = canvas.getContext("2d");
-        function drawStars() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < 300; i++) {
-                ctx.fillStyle = `rgb(255,255,${150+Math.random()*105})`;
+        
+        const animate = () => {
+            ctx.fillStyle = 'rgba(10, 22, 40, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                if (p.x > canvas.width) p.x = 0;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.y > canvas.height) p.y = 0;
+                if (p.y < 0) p.y = canvas.height;
+                
+                ctx.fillStyle = `rgba(0, 212, 255, ${p.opacity})`;
                 ctx.beginPath();
-                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, Math.PI*2);
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
+            });
+            
+            requestAnimationFrame(animate);
+        };
+        
+        animate();
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    },
+    
+    setupNavigation() {
+        this.navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.getAttribute('data-page');
+                this.navigateTo(page);
+            });
+        });
+    },
+    
+    navigateTo(page) {
+        this.pages.forEach(p => p.classList.remove('active'));
+        
+        const targetPage = document.querySelector(`[data-page="${page}"]`);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
+        
+        this.navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('data-page') === page) {
+                link.classList.add('active');
             }
-        }
-        drawStars();
-        canvas.addEventListener("click", (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
-            ctx.fillStyle = "cyan";
-            ctx.beginPath();
-            ctx.arc(x, y, 4, 0, Math.PI*2);
-            ctx.fill();
-            showToast(`Bintang baru lahir di koordinat ${Math.floor(x)},${Math.floor(y)}`);
         });
-
-        // 10. AI Chatbot (rule-based)
-        const chatLog = document.getElementById("chat-log");
-        const chatInput = document.getElementById("chat-input");
-        const sendBtn = document.getElementById("send-chat");
-        function botResponse(userMsg) {
-            const msg = userMsg.toLowerCase();
-            if (msg.includes("planet")) return "Planet ada 8: Merkurius hingga Neptunus. Pluto dianggap planet kerdil.";
-            if (msg.includes("bintang")) return "Bintang adalah bola gas panas yang memancarkan cahaya. Matahari adalah bintang terdekat.";
-            if (msg.includes("lubang hitam")) return "Lubang hitam adalah wilayah dengan gravitasi sangat kuat, bahkan cahaya tak bisa lepas.";
-            if (msg.includes("galaksi")) return "Galaksi adalah kumpulan miliaran bintang. Bima Sakti adalah galaksi kita.";
-            if (msg.includes("bulan")) return "Bulan adalah satelit alami Bumi, berjarak ~384.400 km.";
-            if (msg.includes("matahari")) return "Matahari adalah bintang di pusat tata surya, suhu permukaan ~5500°C.";
-            if (msg.includes("asteroid")) return "Asteroid adalah batuan kecil mengorbit matahari, banyak di sabuk antara Mars dan Jupiter.";
-            if (msg.includes("roket")) return "Roket menggunakan prinsip aksi-reaksi untuk meluncur ke luar angkasa.";
-            if (msg.includes("astronot")) return "Astronot adalah orang yang terlatih untuk melakukan perjalanan luar angkasa.";
-            if (msg.includes("teleskop")) return "Teleskop digunakan untuk melihat benda langit. Hubble adalah teleskop luar angkasa terkenal.";
-            return "Maaf, aku masih belajar astronomi. Coba tanya tentang planet, bintang, lubang hitam, atau galaksi!";
+        
+        const hamburger = document.getElementById('hamburgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        if (navMenu?.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            hamburger?.classList.remove('active');
         }
-        function addMessage(text, isUser) {
-            const div = document.createElement("div");
-            div.className = isUser ? "user-message" : "bot-message";
-            div.innerText = text;
-            chatLog.appendChild(div);
-            chatLog.scrollTop = chatLog.scrollHeight;
+        
+        this.state.currentPage = page;
+        this.initPageFeatures(page);
+    },
+    
+    initPageFeatures(page) {
+        switch(page) {
+            case 'home':
+                this.initHome();
+                break;
+            case 'ai-assistant':
+                this.initAIChat();
+                break;
+            case 'education':
+                this.initEducation();
+                break;
+            case 'quiz':
+                this.initQuiz();
+                break;
+            case 'tools':
+                this.initTools();
+                break;
+            case 'nasa-hub':
+                this.initNASA();
+                break;
+            case 'dashboard':
+                this.initDashboard();
+                break;
+            case 'profile':
+                this.initProfile();
+                break;
         }
-        sendBtn.addEventListener("click", () => {
-            const msg = chatInput.value.trim();
-            if (!msg) return;
-            addMessage(msg, true);
-            const reply = botResponse(msg);
-            setTimeout(() => addMessage(reply, false), 300);
-            chatInput.value = "";
-        });
-        chatInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendBtn.click(); });
-
-        // 11. Copy email di home
-        const homeCopyBtn = document.getElementById("homeCopyEmail");
-        if (homeCopyBtn) {
-            homeCopyBtn.addEventListener("click", () => {
-                navigator.clipboard.writeText("cahyonocahyxz@gmail.com");
-                showToast("Email disalin!");
+    },
+    
+    // HOME PAGE
+    initHome() {
+        this.setupQuickChat();
+        this.setupISSTracker();
+        this.setupMoonPhase();
+        this.setupClock();
+        this.setupFacts();
+        this.setupNews();
+    },
+    
+    setupQuickChat() {
+        const btn = document.getElementById('quickChatBtn');
+        const input = document.getElementById('quickChatInput');
+        
+        if (btn) {
+            btn.addEventListener('click', async () => {
+                const msg = input?.value.trim();
+                if (msg) {
+                    const response = document.getElementById('quickChatResponse');
+                    response.innerHTML = '<p style="opacity: 0.7;">Processing...</p>';
+                    
+                    try {
+                        const result = await fetch('/api/chat', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: msg }),
+                        });
+                        const data = await result.json();
+                        response.innerHTML = `<p>${data.message || 'No response'}</p>`;
+                    } catch (error) {
+                        response.innerHTML = '<p>Error connecting to AI service</p>';
+                    }
+                    
+                    input.value = '';
+                }
             });
         }
-
-        // 12. Status dinamis
-        const statuses = ["Mengamati Nebula Orion", "Menghitung Jarak Antar Galaksi", "Mempelajari Lubang Hitam", "Menjelajah Exoplanet", "Memantau Bintik Matahari", "Menganalisis Spektrum Bintang"];
-        const statusSpan = document.getElementById("live-status");
-        setInterval(() => {
-            statusSpan.innerText = statuses[Math.floor(Math.random() * statuses.length)];
-        }, 10000);
+    },
+    
+    async setupISSTracker() {
+        const btn = document.getElementById('issTrackerBtn');
+        if (!btn) return;
+        
+        btn.addEventListener('click', async () => {
+            const data = document.getElementById('issData');
+            try {
+                const response = await fetch('https://api.open-notify.org/iss-now.json');
+                const iss = await response.json();
+                data.innerHTML = `
+                    <p>Latitude: ${iss.iss_position.latitude.toFixed(2)}°</p>
+                    <p>Longitude: ${iss.iss_position.longitude.toFixed(2)}°</p>
+                    <p>Updated: Just now</p>
+                `;
+            } catch {
+                data.innerHTML = '<p>Could not fetch ISS location</p>';
+            }
+        });
+    },
+    
+    setupMoonPhase() {
+        const phases = ['🌑 New Moon', '🌒 Waxing Crescent', '🌓 First Quarter', '🌔 Waxing Gibbous', 
+                       '🌕 Full Moon', '🌖 Waning Gibbous', '🌗 Last Quarter', '🌘 Waning Crescent'];
+        const phase = phases[Math.floor(Math.random() * phases.length)];
+        
+        const display = document.getElementById('moonDisplay');
+        const text = document.getElementById('moonPhaseText');
+        
+        if (display) display.textContent = phase.split(' ')[0];
+        if (text) text.textContent = phase.split(' ').slice(1).join(' ');
+    },
+    
+    setupClock() {
+        const updateClock = () => {
+            const now = new Date();
+            const clock = document.getElementById('realtimeClock');
+            const date = document.getElementById('clockDate');
+            
+            if (clock) clock.textContent = now.toLocaleTimeString();
+            if (date) date.textContent = now.toLocaleDateString();
+        };
+        
+        updateClock();
+        setInterval(updateClock, 1000);
+    },
+    
+    setupFacts() {
+        const facts = [
+            'The Sun accounts for 99.86% of all mass in the Solar System',
+            'A day on Venus is longer than its year',
+            'There are more stars than grains of sand on all Earth beaches',
+            'Jupiter is so large that 1,300 Earths could fit inside it',
+            'Saturn\'s rings would disappear in 100-200 million years',
+            'Light from Andromeda takes 2.5 million years to reach us',
+            'Mercury has no atmosphere but has water ice',
+            'Mars has the largest volcano in the Solar System',
+            'The Moon is moving away from Earth at 3.8cm per year',
+            'Black holes can have temperatures and emit radiation',
+        ];
+        
+        const btn = document.getElementById('factBtn');
+        const display = document.getElementById('factDisplay');
+        
+        const showFact = () => {
+            if (display) display.textContent = facts[Math.floor(Math.random() * facts.length)];
+        };
+        
+        showFact();
+        if (btn) btn.addEventListener('click', showFact);
+    },
+    
+    setupNews() {
+        const btn = document.getElementById('newsBtn');
+        if (!btn) return;
+        
+        const news = [
+            'JWST discovers earliest galaxies',
+            'SpaceX Starship Mars preparation progresses',
+            'NASA announces lunar base plans',
+            'Exoplanet with atmosphere found',
+            'ISS conducts biology experiments',
+        ];
+        
+        btn.addEventListener('click', () => {
+            const container = document.getElementById('newsContainer');
+            if (container) {
+                container.innerHTML = news.map(n => 
+                    `<div class="news-item"><a href="#">${n}</a></div>`
+                ).join('');
+            }
+        });
+    },
+    
+    // AI CHAT PAGE
+    initAIChat() {
+        const input = document.getElementById('chatInput');
+        const btn = document.getElementById('sendBtn');
+        
+        const sendMessage = async () => {
+            const msg = input?.value.trim();
+            if (!msg) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-message user-message';
+            userMsg.innerHTML = `<p>${this.escapeHtml(msg)}</p>`;
+            chatBox?.appendChild(userMsg);
+            
+            input.value = '';
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg }),
+                });
+                const data = await response.json();
+                
+                const botMsg = document.createElement('div');
+                botMsg.className = 'chat-message bot-message';
+                botMsg.innerHTML = `<p>${this.escapeHtml(data.message || 'No response')}</p>`;
+                chatBox?.appendChild(botMsg);
+            } catch (error) {
+                console.error('Chat error:', error);
+            }
+            
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+        
+        if (btn) btn.addEventListener('click', sendMessage);
+        if (input) input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    },
+    
+    // EDUCATION PAGE
+    initEducation() {
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const prevBtn = document.getElementById('prevPage');
+        const nextBtn = document.getElementById('nextPage');
+        
+        const filterContent = () => {
+            const search = (searchInput?.value || '').toLowerCase();
+            const category = categoryFilter?.value || '';
+            
+            this.state.educationFiltered = this.state.astronomyData.filter(item => {
+                const matchesSearch = !search || item.name.toLowerCase().includes(search);
+                const matchesCategory = !category || item.category === category;
+                return matchesSearch && matchesCategory;
+            });
+            
+            this.state.educationCurrentPage = 1;
+            this.displayEducationContent();
+        };
+        
+        if (searchInput) searchInput.addEventListener('input', filterContent);
+        if (categoryFilter) categoryFilter.addEventListener('change', filterContent);
+        if (prevBtn) prevBtn.addEventListener('click', () => {
+            if (this.state.educationCurrentPage > 1) {
+                this.state.educationCurrentPage--;
+                this.displayEducationContent();
+            }
+        });
+        if (nextBtn) nextBtn.addEventListener('click', () => {
+            this.state.educationCurrentPage++;
+            this.displayEducationContent();
+        });
+        
+        filterContent();
+    },
+    
+    displayEducationContent() {
+        const container = document.getElementById('educationContent');
+        if (!container) return;
+        
+        const itemsPerPage = 5;
+        const start = (this.state.educationCurrentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const items = this.state.educationFiltered.slice(start, end);
+        
+        container.innerHTML = items.map(item => `
+            <div class="education-item">
+                <h4>${item.category}</h4>
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                ${item.facts ? `<p><strong>Facts:</strong> ${item.facts}</p>` : ''}
+            </div>
+        `).join('');
+        
+        const pageInfo = document.getElementById('pageInfo');
+        if (pageInfo) pageInfo.textContent = `Page ${this.state.educationCurrentPage}`;
+    },
+    
+    // QUIZ PAGE
+    initQuiz() {
+        const startBtn = document.getElementById('startQuizBtn');
+        const leaderboardBtn = document.getElementById('viewLeaderboardBtn');
+        
+        if (startBtn) startBtn.addEventListener('click', () => this.startQuiz());
+        if (leaderboardBtn) leaderboardBtn.addEventListener('click', () => this.showLeaderboard());
+    },
+    
+    startQuiz() {
+        this.state.quizStarted = true;
+        this.state.quizCurrentQuestion = 0;
+        this.state.quizScore = 0;
+        
+        const quizStart = document.getElementById('quizStart');
+        const quizContainer = document.getElementById('quizContainer');
+        
+        if (quizStart) quizStart.style.display = 'none';
+        if (quizContainer) quizContainer.style.display = 'block';
+        
+        this.displayQuizQuestion();
+    },
+    
+    displayQuizQuestion() {
+        if (this.state.quizCurrentQuestion >= this.state.quizQuestions.length) {
+            this.showQuizResults();
+            return;
+        }
+        
+        const q = this.state.quizQuestions[this.state.quizCurrentQuestion];
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const counter = document.getElementById('questionCounter');
+        
+        if (questionText) questionText.textContent = q.question;
+        if (counter) counter.textContent = `Question ${this.state.quizCurrentQuestion + 1} of 100`;
+        
+        if (optionsContainer) {
+            optionsContainer.innerHTML = q.options.map((opt, idx) => `
+                <div class="quiz-option" data-index="${idx}">${opt}</div>
+            `).join('');
+            
+            optionsContainer.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    optionsContainer.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+        }
+        
+        this.updateProgressBar();
+    },
+    
+    updateProgressBar() {
+        const progress = (this.state.quizCurrentQuestion / this.state.quizQuestions.length) * 100;
+        const progressFill = document.getElementById('progressFill');
+        if (progressFill) progressFill.style.width = progress + '%';
+    },
+    
+    showQuizResults() {
+        const quizContainer = document.getElementById('quizContainer');
+        const quizResults = document.getElementById('quizResults');
+        const scoreValue = document.getElementById('scoreValue');
+        const scorePercentage = document.getElementById('scorePercentage');
+        
+        if (quizContainer) quizContainer.style.display = 'none';
+        if (quizResults) quizResults.style.display = 'block';
+        
+        const percentage = Math.round((this.state.quizScore / this.state.quizQuestions.length) * 100);
+        
+        if (scoreValue) scoreValue.textContent = `${this.state.quizScore}/100`;
+        if (scorePercentage) scorePercentage.textContent = `${percentage}%`;
+        
+        this.saveQuizResult(percentage);
+    },
+    
+    saveQuizResult(score) {
+        const leaderboard = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
+        leaderboard.push({ date: new Date().toLocaleDateString(), score });
+        localStorage.setItem('quizLeaderboard', JSON.stringify(leaderboard.slice(-10)));
+    },
+    
+    showLeaderboard() {
+        const quizStart = document.getElementById('quizStart');
+        const leaderboard = document.getElementById('leaderboard');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const data = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
+        
+        if (quizStart) quizStart.style.display = 'none';
+        if (leaderboard) leaderboard.style.display = 'block';
+        
+        if (leaderboardList) {
+            leaderboardList.innerHTML = data.reverse().map((item, idx) => `
+                <div class="leaderboard-item">
+                    <span>#${idx + 1}</span>
+                    <span>${item.score}%</span>
+                    <span>${item.date}</span>
+                </div>
+            `).join('');
+        }
+        
+        const backBtn = document.getElementById('backFromLeaderboardBtn');
+        if (backBtn) {
+            backBtn.onclick = () => {
+                if (leaderboard) leaderboard.style.display = 'none';
+                if (quizStart) quizStart.style.display = 'block';
+            };
+        }
+    },
+    
+    // TOOLS PAGE
+    initTools() {
+        const toolBtns = document.querySelectorAll('.tool-btn');
+        
+        toolBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const tool = e.target.getAttribute('data-tool');
+                const toolCard = e.target.closest('.tool-card');
+                const inputs = Array.from(toolCard?.querySelectorAll('.tool-input') || []);
+                const result = toolCard?.querySelector('.tool-result');
+                
+                let calculation = '';
+                
+                switch(tool) {
+                    case 'au-km':
+                        const au = parseFloat(inputs[0]?.value || 0);
+                        calculation = `${au} AU = ${(au * 149597870.7).toFixed(2)} km`;
+                        break;
+                    case 'km-au':
+                        const km = parseFloat(inputs[0]?.value || 0);
+                        calculation = `${km} km = ${(km / 149597870.7).toFixed(6)} AU`;
+                        break;
+                    case 'planet-weight':
+                        const weight = parseFloat(inputs[0]?.value || 0);
+                        const planet = inputs[1]?.value || 'earth';
+                        const g = { mercury: 0.38, venus: 0.91, earth: 1, mars: 0.38, jupiter: 2.48, saturn: 1.04, uranus: 0.87, neptune: 1.12 };
+                        calculation = `Weight on ${planet}: ${(weight * (g[planet] || 1)).toFixed(2)} kg`;
+                        break;
+                    default:
+                        calculation = 'Calculation complete';
+                }
+                
+                if (result) result.textContent = calculation;
+            });
+        });
+    },
+    
+    // NASA HUB PAGE
+    initNASA() {
+        const todayBtn = document.getElementById('nasaTodayBtn');
+        const randomBtn = document.getElementById('nasaRandomBtn');
+        const dateBtn = document.getElementById('nasaDateBtn');
+        
+        if (todayBtn) todayBtn.addEventListener('click', () => this.fetchAPOD());
+        if (randomBtn) randomBtn.addEventListener('click', () => this.fetchAPODRandom());
+        if (dateBtn) dateBtn.addEventListener('click', () => {
+            const date = document.getElementById('nasaDatePicker')?.value;
+            if (date) this.fetchAPOD(date);
+        });
+        
+        this.fetchAPOD();
+    },
+    
+    async fetchAPOD(date = '') {
+        const container = document.getElementById('nasaContainer');
+        if (!container) return;
+        
+        container.innerHTML = '<div class="loading-skeleton">Loading NASA APOD...</div>';
+        
+        try {
+            const key = 'LWEBjgPhheVUhs8ZmYhN8Y9fEH9DbXiiqUjrd2Nm';
+            const url = `https://api.nasa.gov/planetary/apod?api_key=${key}${date ? `&date=${date}` : ''}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            container.innerHTML = `
+                <div class="nasa-item">
+                    ${data.media_type === 'image' ? `<img src="${data.url}" alt="${data.title}">` : '<p>Video content</p>'}
+                    <h3>${data.title}</h3>
+                    <p class="nasa-date">${data.date}</p>
+                    <p>${data.explanation}</p>
+                </div>
+            `;
+        } catch (error) {
+            container.innerHTML = '<p>Error loading APOD</p>';
+        }
+    },
+    
+    fetchAPODRandom() {
+        const days = Math.floor(Math.random() * 365);
+        const date = new Date();
+        date.setDate(date.getDate() - days);
+        this.fetchAPOD(date.toISOString().split('T')[0]);
+    },
+    
+    // DASHBOARD PAGE
+    initDashboard() {
+        const leaderboard = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
+        
+        const updateStat = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+        
+        updateStat('totalQuizzes', leaderboard.length);
+        updateStat('avgScore', leaderboard.length > 0 ? 
+            Math.round(leaderboard.reduce((a, b) => a + b.score, 0) / leaderboard.length) + '%' : '0%');
+        updateStat('contentLearned', this.state.astronomyData.length);
+        updateStat('toolsUsed', '20+');
+        
+        this.drawPerformanceChart();
+    },
+    
+    drawPerformanceChart() {
+        const canvas = document.getElementById('performanceChart');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        const leaderboard = JSON.parse(localStorage.getItem('quizLeaderboard') || '[]');
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if (leaderboard.length === 0) {
+            ctx.fillStyle = '#b0b0b0';
+            ctx.font = '14px Arial';
+            ctx.fillText('No quiz data yet', 50, 100);
+            return;
+        }
+        
+        const barWidth = canvas.width / leaderboard.length;
+        leaderboard.forEach((item, idx) => {
+            const barHeight = (item.score / 100) * canvas.height;
+            const x = idx * barWidth;
+            const y = canvas.height - barHeight;
+            
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillRect(x, y, barWidth - 2, barHeight);
+        });
+    },
+    
+    // PROFILE PAGE
+    initProfile() {
+        const counters = document.querySelectorAll('.stat-number[data-target]');
+        
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            let current = 0;
+            const increment = target / 30;
+            
+            const update = () => {
+                current += increment;
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(update);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+            
+            update();
+        });
+    },
+    
+    // UTILITIES
+    escapeHtml(text) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    },
+    
+    loadInitialData() {
+        // Generate 500+ astronomy data
+        const categories = ['Planet', 'Star', 'Galaxy', 'Phenomenon', 'Mission', 'Black Hole', 'Nebula'];
+        
+        for (let i = 0; i < 500; i++) {
+            this.state.astronomyData.push({
+                name: `Object ${i + 1}`,
+                category: categories[i % categories.length],
+                description: `Interesting astronomical object with unique characteristics`,
+                facts: `Fascinating fact about this celestial body`
+            });
+        }
+        
+        // Generate 100 quiz questions
+        const baseQuestions = [
+            { question: 'What is the largest planet?', options: ['Jupiter', 'Saturn', 'Neptune', 'Uranus'], correct: 0 },
+            { question: 'How many moons does Mars have?', options: ['1', '2', '3', '4'], correct: 1 },
+            { question: 'Closest star to Earth?', options: ['Sirius', 'Proxima Centauri', 'Alpha Centauri', 'Vega'], correct: 1 },
+            { question: 'Our galaxy name?', options: ['Andromeda', 'Milky Way', 'Triangulum', 'Pinwheel'], correct: 1 },
+            { question: 'Light travel time from Sun?', options: ['8 seconds', '8 minutes', '8 hours', '8 days'], correct: 1 },
+            { question: 'What is a black hole?', options: ['Star', 'Gravity region', 'Galaxy', 'Comet'], correct: 1 },
+            { question: 'Hottest planet?', options: ['Mercury', 'Venus', 'Earth', 'Mars'], correct: 1 },
+            { question: '1 AU in kilometers?', options: ['100M', '149.6M', '200M', '250M'], correct: 1 },
+            { question: 'What is a supernova?', options: ['New star', 'Exploding star', 'Dark star', 'Dying planet'], correct: 1 },
+            { question: 'Speed of light?', options: ['300k m/s', '300k km/s', '3k km/s', '30k km/s'], correct: 1 },
+        ];
+        
+        for (let i = 0; i < 100; i++) {
+            this.state.quizQuestions.push(baseQuestions[i % baseQuestions.length]);
+        }
+        
+        this.state.educationFiltered = this.state.astronomyData.slice(0, 5);
     }
+};
 
-    // ==================== FUNGSI LAIN (copy email & wallet) ====================
-    const copyEmailBtn = document.getElementById("copyEmailBtn");
-    if (copyEmailBtn) {
-        copyEmailBtn.addEventListener("click", () => {
-            navigator.clipboard.writeText("cahyonocahyxz@gmail.com");
-            showToast("Email tersalin!");
+// HAMBURGER MENU
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.getElementById('hamburgerMenu');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            navMenu?.classList.toggle('active');
+            hamburger.classList.toggle('active');
         });
     }
-    const copyWallet = document.getElementById("copyWalletBtn");
-    if (copyWallet) {
-        copyWallet.addEventListener("click", () => {
-            navigator.clipboard.writeText("081262131455");
-            showToast("Nomor e-wallet tersalin!");
-        });
-    }
-    const ovoBtn = document.getElementById("ovoAlertBtn");
-    if (ovoBtn) {
-        ovoBtn.addEventListener("click", () => alert("Nomor OVO: 081262131455"));
-    }
+    
+    // Initialize app
+    App.init();
+    App.navigateTo('home');
 });

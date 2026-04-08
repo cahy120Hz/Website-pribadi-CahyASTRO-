@@ -1,277 +1,469 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>CahyASTRO | Universe Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CahyASTRO Portal - Astronomy Education Platform</title>
+    <meta name="description" content="Interactive astronomy education platform with AI assistance, 3D star maps, and comprehensive space knowledge">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
     <!-- LOADING SCREEN -->
-    <div id="loading-screen">
-        <div class="loader-content">
-            <div class="star-load"></div>
-            <h2>Welcome to My Universe</h2>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progress-bar"></div>
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-container">
+            <div class="loading-logo">🌌</div>
+            <h2>CahyASTRO Portal</h2>
+            <p style="color: #b0b0b0; margin-bottom: 20px;">Exploring the Universe</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
             </div>
-            <p id="progress-text">0%</p>
         </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div id="app" style="display: none;">
+    <!-- GALAXY BACKGROUND -->
+    <canvas id="galaxyCanvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></canvas>
+
+    <!-- APP CONTAINER -->
+    <div class="app-container">
+        <!-- NAVBAR -->
         <nav class="navbar">
-            <div class="logo">CAHY| <span class="neon-dot">🌌</span></div>
-            <ul class="nav-menu" id="nav-menu">
-                <li data-page="home" class="nav-item active">Home</li>
-                <li data-page="profile" class="nav-item">Profile</li>
-                <li data-page="komunitas" class="nav-item">Komunitas</li>
-                <li data-page="sosial" class="nav-item">Sosial Media</li>
-                <li data-page="support" class="nav-item">Support</li>
-                <li data-page="bisnis" class="nav-item">Bisnis</li>
-            </ul>
-            <div class="menu-toggle" id="mobile-menu">
-                <i class="fas fa-bars"></i>
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <span class="logo-icon">🌌</span>
+                    <span class="logo-text">CahyASTRO</span>
+                </div>
+                
+                <button id="hamburgerMenu" class="hamburger-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <ul id="navMenu" class="nav-menu">
+                    <li><a href="#" data-page="home" class="nav-link active">Home</a></li>
+                    <li><a href="#" data-page="ai-assistant" class="nav-link">AI Chat</a></li>
+                    <li><a href="#" data-page="education" class="nav-link">Education</a></li>
+                    <li><a href="#" data-page="quiz" class="nav-link">Quiz</a></li>
+                    <li><a href="#" data-page="tools" class="nav-link">Tools</a></li>
+                    <li><a href="#" data-page="nasa-hub" class="nav-link">NASA Hub</a></li>
+                    <li><a href="#" data-page="dashboard" class="nav-link">Dashboard</a></li>
+                    <li><a href="#" data-page="profile" class="nav-link">Profile</a></li>
+                </ul>
             </div>
         </nav>
 
-        <!-- Particle Starfield (CSS) -->
-        <div class="stars-bg"></div>
-        <div class="floating-particles"></div>
-
-        <main class="content-container">
-            <!-- HOME PAGE (dengan semua fitur baru) -->
-            <section id="home-page" class="page active-page">
-                <!-- Profile Header -->
-                <div class="profile-header glass-card">
-                    <div class="avatar">
-                        <div class="avatar-glow">
-                            <i class="fas fa-user-astronaut"></i>
-                        </div>
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            
+            <!-- HOME PAGE -->
+            <section class="page active" data-page="home">
+                <div class="page-container">
+                    <div class="hero-section">
+                        <h1 class="hero-title">Welcome to CahyASTRO</h1>
+                        <p class="hero-subtitle">Explore the cosmos with interactive astronomy tools and AI guidance</p>
                     </div>
-                    <div class="info">
-                        <h2>CAHY / RIA</h2>
-                        <p class="bio">🌠 HANYA INGIN MENJADI TERKENAL DI DUNIA ASTRONOMY 🌠</p>
-                        <div class="contact-row">
-                            <span><i class="fab fa-whatsapp"></i> +62 812-6213-1455</span>
-                            <span><i class="far fa-envelope"></i> cahyonocahyxz@gmail.com</span>
-                            <button id="homeCopyEmail" class="small-copy"><i class="fas fa-copy"></i></button>
+
+                    <!-- FEATURES GRID -->
+                    <div class="features-grid">
+                        <!-- Feature 1: Quick Chat -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>Quick Chat</h3>
+                                <span class="icon">💬</span>
+                            </div>
+                            <div class="card-content">
+                                <input type="text" id="quickChatInput" class="quick-chat-input" placeholder="Ask about space...">
+                                <button id="quickChatBtn" class="btn-primary">Send</button>
+                                <div id="quickChatResponse" class="tool-result"></div>
+                            </div>
                         </div>
-                        <div class="status-badge">
-                            <i class="fas fa-satellite-dish"></i> Status: <span id="live-status">Menjelajah Galaksi Andromeda</span>
+
+                        <!-- Feature 2: ISS Tracker -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>ISS Tracker</h3>
+                                <span class="icon">📍</span>
+                            </div>
+                            <div class="card-content">
+                                <button id="issTrackerBtn" class="btn-primary">Get ISS Location</button>
+                                <div id="issData" class="tracker-data">
+                                    <p>Click button to fetch location</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3: Moon Phase -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>Moon Phase</h3>
+                                <span class="icon">🌙</span>
+                            </div>
+                            <div class="card-content">
+                                <div id="moonDisplay" class="moon-display">🌕</div>
+                                <p id="moonPhaseText" style="text-align: center; color: #00d4ff;">Full Moon</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4: Real-time Clock -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>UTC Time</h3>
+                                <span class="icon">⏰</span>
+                            </div>
+                            <div class="card-content">
+                                <div id="realtimeClock" class="clock-display">--:--:--</div>
+                                <p id="clockDate" style="text-align: center; color: #b0b0b0; margin-top: 1rem;">--/--/--</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 5: Random Fact -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>Space Fact</h3>
+                                <span class="icon">✨</span>
+                            </div>
+                            <div class="card-content">
+                                <button id="factBtn" class="btn-primary">Generate Fact</button>
+                                <p id="factDisplay" style="color: #b0b0b0; margin-top: 1rem; line-height: 1.6;"></p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 6: Space News -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>Latest News</h3>
+                                <span class="icon">📰</span>
+                            </div>
+                            <div class="card-content">
+                                <button id="newsBtn" class="btn-primary">Load News</button>
+                                <div id="newsContainer" class="news-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 7: AI Chat -->
+                        <div class="feature-card">
+                            <div class="card-header">
+                                <h3>AI Assistant</h3>
+                                <span class="icon">🤖</span>
+                            </div>
+                            <div class="card-content">
+                                <p style="color: #b0b0b0; font-size: 0.9rem;">Advanced AI assistant for space questions</p>
+                                <button class="btn-primary" onclick="document.querySelector('[data-page=\"ai-assistant\"]').click()">Start Chat</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Grid Fitur Astronomi (12+ fitur) -->
-                <div class="astro-grid">
-                    <!-- 1. Fakta Hari Ini + Gambar -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-star"></i> Fakta Hari Ini</h3>
-                        <div class="fact-image" id="fact-image">🌟</div>
-                        <p id="daily-fact">Memuat fakta...</p>
-                        <button class="btn-refresh" id="refreshFact"><i class="fas fa-sync-alt"></i> Fakta Lain</button>
-                    </div>
-
-                    <!-- 2. Cuaca Antariksa -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-sun"></i> Cuaca Antariksa</h3>
-                        <div id="space-weather">
-                            <p><i class="fas fa-meteor"></i> Aurora: <span id="aurora">--</span></p>
-                            <p><i class="fas fa-wind"></i> Angin Surya: <span id="solar-wind">--</span> km/s</p>
-                            <p><i class="fas fa-circle"></i> Bintik Matahari: <span id="sunspots">--</span></p>
+            <!-- AI CHAT PAGE -->
+            <section class="page" data-page="ai-assistant">
+                <div class="page-container">
+                    <h1>AI Chat Assistant</h1>
+                    <div class="ai-chat-container">
+                        <div id="chatBox" class="chat-box"></div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chatInput" class="chat-input" placeholder="Ask me anything about astronomy...">
+                            <button id="sendBtn" class="btn-primary btn-send">Send</button>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <!-- 3. Kuis Astronomi (15 soal) -->
-                    <div class="feature-card wide-card">
-                        <h3><i class="fas fa-question-circle"></i> Kuis Astronomi</h3>
-                        <div id="quiz-area">
-                            <p id="quiz-question">Soal akan muncul di sini</p>
-                            <div id="quiz-options"></div>
-                            <div id="quiz-score">Skor: 0 / 15</div>
-                            <button id="nextQuiz" class="btn-small">Soal Selanjutnya</button>
-                            <p id="quiz-feedback"></p>
-                        </div>
+            <!-- EDUCATION PAGE -->
+            <section class="page" data-page="education">
+                <div class="page-container">
+                    <h1>Astronomy Education</h1>
+                    
+                    <div class="education-controls">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search astronomy topics...">
+                        <select id="categoryFilter" class="category-select">
+                            <option value="">All Categories</option>
+                            <option value="Planet">Planets</option>
+                            <option value="Star">Stars</option>
+                            <option value="Galaxy">Galaxies</option>
+                            <option value="Phenomenon">Phenomena</option>
+                            <option value="Mission">Missions</option>
+                            <option value="Black Hole">Black Holes</option>
+                            <option value="Nebula">Nebulas</option>
+                        </select>
                     </div>
 
-                    <!-- 4. NASA APOD (Gambar Hari Ini) -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-image"></i> NASA APOD</h3>
-                        <div id="apod-container">
-                            <img id="apod-img" src="https://via.placeholder.com/300x200?text=Loading+NASA+Image" alt="APOD">
-                            <p id="apod-title"></p>
-                            <a id="apod-link" href="#" target="_blank">Lihat Detail</a>
-                        </div>
+                    <div id="educationContent" class="education-content"></div>
+
+                    <div class="pagination">
+                        <button id="prevPage" class="btn-pagination">← Previous</button>
+                        <span id="pageInfo">Page 1</span>
+                        <button id="nextPage" class="btn-pagination">Next →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUIZ PAGE -->
+            <section class="page" data-page="quiz">
+                <div class="page-container">
+                    <h1>Astronomy Quiz Challenge</h1>
+
+                    <!-- Quiz Start Screen -->
+                    <div id="quizStart" class="quiz-start">
+                        <p>Test your astronomy knowledge with 100 challenging questions!</p>
+                        <button id="startQuizBtn" class="btn-primary" style="margin-right: 1rem; margin-bottom: 1rem;">Start Quiz</button>
+                        <button id="viewLeaderboardBtn" class="btn-secondary">View Leaderboard</button>
                     </div>
 
-                    <!-- 5. Countdown Gerhana -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-hourglass-half"></i> Countdown Gerhana Bulan</h3>
-                        <div id="countdown">-- hari -- jam -- menit -- detik</div>
-                        <p>Gerhana Bulan Total: 7 September 2026</p>
-                    </div>
-
-                    <!-- 6. Quote Astronomi -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-quote-left"></i> Quote Space</h3>
-                        <p id="astro-quote">"The universe is under no obligation to make sense to you." - Neil deGrasse Tyson</p>
-                        <button id="newQuote" class="btn-small">Quote Baru</button>
-                    </div>
-
-                    <!-- 7. Fase Bulan -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-moon"></i> Fase Bulan Saat Ini</h3>
-                        <div id="moon-phase">
-                            <i class="fas fa-moon" id="moon-icon"></i>
-                            <p id="moon-phase-name">--</p>
-                            <p id="moon-illumination">Illumination: --%</p>
-                        </div>
-                    </div>
-
-                    <!-- 8. Lokasi ISS -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-space-shuttle"></i> Lokasi ISS</h3>
-                        <div id="iss-location">
-                            <p>Latitude: <span id="iss-lat">--</span>°</p>
-                            <p>Longitude: <span id="iss-lon">--</span>°</p>
-                            <p>Altitude: <span id="iss-alt">--</span> km</p>
-                            <button id="refreshISS" class="btn-small"><i class="fas fa-sync-alt"></i> Refresh</button>
-                        </div>
-                    </div>
-
-                    <!-- 9. Tabel Planet dengan Ikon -->
-                    <div class="feature-card wide-card">
-                        <h3><i class="fas fa-planet-ringed"></i> Fakta Cepat Planet</h3>
-                        <div class="planet-table">
-                            <div class="planet-row"><span><i class="fas fa-mercury"></i> Merkurius</span><span>Terdekat Matahari</span></div>
-                            <div class="planet-row"><span><i class="fas fa-venus"></i> Venus</span><span>Planet terpanas</span></div>
-                            <div class="planet-row"><span><i class="fas fa-earth"></i> Bumi</span><span>Rumah kita</span></div>
-                            <div class="planet-row"><span><i class="fas fa-mars"></i> Mars</span><span>Planet Merah</span></div>
-                            <div class="planet-row"><span><i class="fas fa-jupiter"></i> Jupiter</span><span>Raksasa gas</span></div>
-                            <div class="planet-row"><span><i class="fas fa-saturn"></i> Saturnus</span><span>Cincin indah</span></div>
-                            <div class="planet-row"><span><i class="fas fa-uranus"></i> Uranus</span><span>Miring ekstrim</span></div>
-                            <div class="planet-row"><span><i class="fas fa-neptune"></i> Neptunus</span><span>Angin tercepat</span></div>
-                        </div>
-                    </div>
-
-                    <!-- 10. AI Chatbot -->
-                    <div class="feature-card wide-card">
-                        <h3><i class="fas fa-robot"></i> AI AstroBot (masih bego☺🗿)</h3>
-                        <div class="chat-container">
-                            <div id="chat-log" class="chat-log">
-                                <div class="bot-message">Halo! Aku AstroBot. Tanyakan apa saja tentang astronomi, planet, bintang, atau fakta luar angkasa.</div>
+                    <!-- Quiz Container -->
+                    <div id="quizContainer" class="quiz-container" style="display: none;">
+                        <div class="quiz-header">
+                            <div class="quiz-progress">
+                                <div class="progress-fill" id="progressFill"></div>
+                                <span id="questionCounter">Question 1 of 100</span>
                             </div>
-                            <div class="chat-input">
-                                <input type="text" id="chat-input" placeholder="Tanya tentang bintang, planet, dll...">
-                                <button id="send-chat"><i class="fas fa-paper-plane"></i> Kirim</button>
-                            </div>
+                            <div class="quiz-timer" id="quizTimer">⏱️</div>
+                        </div>
+
+                        <div class="quiz-content">
+                            <h3 id="questionText">Question text here</h3>
+                            <div id="optionsContainer" class="options-container"></div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn-primary" onclick="App.displayQuizQuestion()">Next Question</button>
                         </div>
                     </div>
 
-                    <!-- 11. Animasi Partikel (Canvas) -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-chart-line"></i> Peta Bintang Interaktif</h3>
-                        <canvas id="starCanvas" width="300" height="200" style="width:100%; height:auto; background:#000; border-radius:12px;"></canvas>
-                        <p>Klik canvas untuk membuat bintang baru!</p>
+                    <!-- Quiz Results -->
+                    <div id="quizResults" class="quiz-results" style="display: none;">
+                        <h2>Quiz Completed!</h2>
+                        <div class="score-display">
+                            <div class="score-value" id="scoreValue">0/100</div>
+                            <div class="score-percentage" id="scorePercentage">0%</div>
+                        </div>
+                        <button class="btn-primary" onclick="location.reload()">Take Another Quiz</button>
                     </div>
 
-                    <!-- 12. Berita Astronomi -->
-                    <div class="feature-card">
-                        <h3><i class="fas fa-newspaper"></i> Berita Astronomi</h3>
-                        <ul id="news-list">
-                            <li><a href="#" target="_blank">James Webb Temukan Galaksi Tertua</a></li>
-                            <li><a href="#" target="_blank">Roket Starship Siap Uji Coba</a></li>
-                            <li><a href="#" target="_blank">Asteroid 2024 YR4 Amankah?</a></li>
-                            <li><a href="#" target="_blank">Misi Europa Clipper Diluncurkan</a></li>
-                        </ul>
+                    <!-- Leaderboard -->
+                    <div id="leaderboard" class="leaderboard" style="display: none;">
+                        <h2>Top Scores</h2>
+                        <div id="leaderboardList" class="leaderboard-list"></div>
+                        <button id="backFromLeaderboardBtn" class="btn-secondary">Back</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TOOLS PAGE -->
+            <section class="page" data-page="tools">
+                <div class="page-container">
+                    <h1>Astronomy Tools</h1>
+                    <div class="tools-grid">
+                        <!-- Tool 1: AU to KM Converter -->
+                        <div class="tool-card">
+                            <h3>AU to KM Converter</h3>
+                            <p>Convert Astronomical Units to kilometers</p>
+                            <input type="number" class="tool-input" placeholder="Enter AU">
+                            <button data-tool="au-km" class="tool-btn btn-primary">Convert</button>
+                            <div class="tool-result">Result will appear here</div>
+                        </div>
+
+                        <!-- Tool 2: KM to AU Converter -->
+                        <div class="tool-card">
+                            <h3>KM to AU Converter</h3>
+                            <p>Convert kilometers to Astronomical Units</p>
+                            <input type="number" class="tool-input" placeholder="Enter KM">
+                            <button data-tool="km-au" class="tool-btn btn-primary">Convert</button>
+                            <div class="tool-result">Result will appear here</div>
+                        </div>
+
+                        <!-- Tool 3: Planet Weight Calculator -->
+                        <div class="tool-card">
+                            <h3>Planet Weight Calculator</h3>
+                            <p>Calculate your weight on different planets</p>
+                            <input type="number" class="tool-input" placeholder="Your weight (kg)">
+                            <select class="tool-input">
+                                <option value="mercury">Mercury</option>
+                                <option value="venus">Venus</option>
+                                <option value="earth">Earth</option>
+                                <option value="mars">Mars</option>
+                                <option value="jupiter">Jupiter</option>
+                                <option value="saturn">Saturn</option>
+                                <option value="uranus">Uranus</option>
+                                <option value="neptune">Neptune</option>
+                            </select>
+                            <button data-tool="planet-weight" class="tool-btn btn-primary">Calculate</button>
+                            <div class="tool-result">Result will appear here</div>
+                        </div>
+
+                        <!-- Tool 4: Escape Velocity Calculator -->
+                        <div class="tool-card">
+                            <h3>Escape Velocity</h3>
+                            <p>Calculate escape velocity from celestial bodies</p>
+                            <input type="number" class="tool-input" placeholder="Mass (kg)">
+                            <input type="number" class="tool-input" placeholder="Radius (km)">
+                            <button data-tool="escape-velocity" class="tool-btn btn-primary">Calculate</button>
+                            <div class="tool-result">Result will appear here</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NASA HUB PAGE -->
+            <section class="page" data-page="nasa-hub">
+                <div class="page-container">
+                    <h1>NASA Hub - Astronomy Picture of the Day</h1>
+                    
+                    <div class="nasa-controls">
+                        <button id="nasaTodayBtn" class="btn-primary">Today's APOD</button>
+                        <button id="nasaRandomBtn" class="btn-primary">Random Picture</button>
+                        <input type="date" id="nasaDatePicker" class="date-picker">
+                        <button id="nasaDateBtn" class="btn-primary">Load by Date</button>
+                    </div>
+
+                    <div id="nasaContainer" class="nasa-container"></div>
+                </div>
+            </section>
+
+            <!-- DASHBOARD PAGE -->
+            <section class="page" data-page="dashboard">
+                <div class="page-container">
+                    <h1>Your Dashboard</h1>
+                    
+                    <!-- Stats Grid -->
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <h3>Quizzes Completed</h3>
+                            <div class="stat-value" id="totalQuizzes">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Average Score</h3>
+                            <div class="stat-value" id="avgScore">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Content Learned</h3>
+                            <div class="stat-value" id="contentLearned">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Tools Used</h3>
+                            <div class="stat-value" id="toolsUsed">20+</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="dashboard-charts">
+                        <div class="chart-container">
+                            <h3>Quiz Performance</h3>
+                            <canvas id="performanceChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Recent Activity</h3>
+                            <div class="activity-list">
+                                <div class="activity-item">📚 Completed astronomy education module</div>
+                                <div class="activity-item">🎯 Scored 85% on recent quiz</div>
+                                <div class="activity-item">🛠️ Used AU converter tool</div>
+                                <div class="activity-item">🌌 Explored NASA APOD</div>
+                                <div class="activity-item">🤖 Chatted with AI assistant</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SOCIAL HUB PAGE -->
+            <section class="page" data-page="social-hub">
+                <div class="page-container">
+                    <h1>Connect & Share</h1>
+                    <div class="social-grid">
+                        <a href="https://twitter.com" target="_blank" class="social-card">
+                            <div class="social-icon">𝕏</div>
+                            <h3>Twitter/X</h3>
+                            <p>Follow space news</p>
+                        </a>
+                        <a href="https://youtube.com" target="_blank" class="social-card">
+                            <div class="social-icon">▶️</div>
+                            <h3>YouTube</h3>
+                            <p>Space documentaries</p>
+                        </a>
+                        <a href="https://discord.com" target="_blank" class="social-card">
+                            <div class="social-icon">💬</div>
+                            <h3>Discord</h3>
+                            <p>Join our community</p>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-card">
+                            <div class="social-icon">⌨️</div>
+                            <h3>GitHub</h3>
+                            <p>Contribute & code</p>
+                        </a>
                     </div>
                 </div>
             </section>
 
             <!-- PROFILE PAGE -->
-            <section id="profile-page" class="page">
-                <div class="card glass-card">
-                    <h2><i class="fas fa-user-astronaut"></i> Profil Peneliti</h2>
-                    <div class="profile-detail">
-                        <p><strong>Nama panggilan:</strong> CAHY / RIA</p>
-                        <p><strong>Bio:</strong> ingin menjadi creator terkenal </p>
-                        <div class="email-box">
-                            <p><strong>Email:</strong> cahyonocahyxz@gmail.com</p>
-                            <button class="btn-copy" id="copyEmailBtn"><i class="fas fa-copy"></i> Copy Email</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- KOMUNITAS PAGE -->
-            <section id="komunitas-page" class="page">
-                <div class="card glass-card">
-                    <h2><i class="fas fa-users"></i> Komunitas Astronomi</h2>
-                    <div class="link-list">
-                        <a href="https://chat.whatsapp.com/GXf8UcuhuAj7HDY71jSQ3X?mode=gi_t" target="_blank" class="btn-link wa"><i class="fab fa-whatsapp"></i> WhatsApp Group</a>
-                        <a href="https://discord.gg/qmmf6AaYR" target="_blank" class="btn-link dc"><i class="fab fa-discord"></i> Discord Server</a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SOSIAL MEDIA PAGE -->
-            <section id="sosial-page" class="page">
-                <div class="card glass-card">
-                    <h2><i class="fas fa-globe"></i> Social Universe</h2>
-                    <div class="social-grid">
-                        <a href="https://www.tiktok.com/@cahy144hz" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok 1</a>
-                        <a href="https://www.tiktok.com/@cahy144hz02" target="_blank" class="social-btn tiktok"><i class="fab fa-tiktok"></i> TikTok 2</a>
-                        <a href="https://youtube.com/@cahy144hz" target="_blank" class="social-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
-                        <a href="https://www.instagram.com/cahy_144hz" target="_blank" class="social-btn ig"><i class="fab fa-instagram"></i> Instagram</a>
-                        <a href="https://open.spotify.com/user/31dbcqsh4codewo2vp5n5ukyhamu" target="_blank" class="social-btn spotify"><i class="fab fa-spotify"></i> Spotify</a>
-                        <a href="https://s.snackvideo.com/u/@cahy144hz/vntdPNbA" target="_blank" class="social-btn snack"><i class="fas fa-video"></i> Snack Video</a>
-                        <a href="https://mobile.capcutshare.com/sv2/ZSuQUAbws/" target="_blank" class="social-btn capcut"><i class="fas fa-cut"></i> CapCut</a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SUPPORT PAGE -->
-            <section id="support-page" class="page">
-                <div class="card glass-card">
-                    <h2><i class="fas fa-hand-holding-heart"></i> Dukung admin di sini</h2>
-                    <div class="support-section">
-                        <div class="donasi-box">
-                            <h3>Saweria</h3>
-                            <a href="https://saweria.co/CahyASTRO" target="_blank" class="btn-donasi-big">Donasi via Saweria <i class="fas fa-rocket"></i></a>
-                        </div>
-                        <div class="ewallet-box">
-                            <h3>E-Wallet</h3>
-                            <p><strong>Nomor:</strong> 081262131455</p>
-                            <div class="ewallet-buttons">
-                                <a href="https://link.dana.id/minta?phone=081262131455" target="_blank" class="btn-ewallet dana"><i class="fas fa-wallet"></i> Dana</a>
-                                <a href="https://gojek.link/gopay/send?phone=081262131455" target="_blank" class="btn-ewallet gopay"><i class="fas fa-credit-card"></i> Gopay</a>
-                                <button id="ovoAlertBtn" class="btn-ewallet ovo"><i class="fas fa-mobile-alt"></i> OVO (Alert)</button>
-                                <button id="copyWalletBtn" class="btn-ewallet copy"><i class="fas fa-copy"></i> Copy Nomor</button>
+            <section class="page" data-page="profile">
+                <div class="page-container">
+                    <h1>User Profile</h1>
+                    <div class="profile-container">
+                        <div class="profile-card">
+                            <div class="profile-avatar">🚀</div>
+                            <div class="profile-name">CahyASTRO Explorer</div>
+                            <div class="profile-nickname">@astronomer_dev</div>
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Badges Earned</span>
+                                    <span class="stat-number" data-target="12">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Total Quizzes</span>
+                                    <span class="stat-number" data-target="45">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Learning Streak</span>
+                                    <span class="stat-number" data-target="28">0</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
 
-            <!-- BISNIS PAGE -->
-            <section id="bisnis-page" class="page">
-                <div class="card glass-card">
-                    <h2><i class="fas fa-briefcase"></i> Kerja Sama & Bisnis</h2>
-                    <p class="bisnis-desc">Hubungi untuk pembelian / kerja sama astronomi, merchandise, atau kolaborasi konten.</p>
-                    <a href="https://wa.me/message/WFPHDICEMISDD1" target="_blank" class="btn-chat-wa"><i class="fab fa-whatsapp"></i> Chat WhatsApp Bisnis</a>
+                        <div class="profile-info">
+                            <h3>About</h3>
+                            <p>Passionate about astronomy and space exploration. Using CahyASTRO to expand knowledge about the cosmos.</p>
+
+                            <h3>Roles & Interests</h3>
+                            <ul class="role-list">
+                                <li>Astronomy Enthusiast</li>
+                                <li>Space Explorer</li>
+                                <li>Science Learner</li>
+                                <li>Community Member</li>
+                            </ul>
+
+                            <h3>Skills & Knowledge</h3>
+                            <div class="skills-grid">
+                                <span class="skill-tag">Planets</span>
+                                <span class="skill-tag">Stars</span>
+                                <span class="skill-tag">Galaxies</span>
+                                <span class="skill-tag">Black Holes</span>
+                                <span class="skill-tag">Nebulas</span>
+                                <span class="skill-tag">Astrophysics</span>
+                            </div>
+
+                            <h3>Achievements</h3>
+                            <p>🏆 Quiz Master - Score 90%+ on 10 quizzes</p>
+                            <p>📚 Knowledge Seeker - Complete 50 education topics</p>
+                            <p>🎯 Consistent Learner - 30-day learning streak</p>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
 
+        <!-- FOOTER -->
         <footer class="footer">
-            <p>✦ Cahy Astro — Menjelajah Alam Semesta ✦</p>
+            <p>&copy; 2026 CahyASTRO Portal. Exploring the Universe Together.</p>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#contact">Contact</a>
+            </div>
         </footer>
     </div>
 
+    <!-- SCRIPTS -->
     <script src="script.js"></script>
 </body>
 </html>
